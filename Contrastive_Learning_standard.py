@@ -13,7 +13,7 @@ try:
     policy = tf.keras.mixed_precision.experimental.Policy('mixed_float16')
     tf.keras.mixed_precision.experimental.set_policy(policy)
 except:
-    pass
+    ...
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, Callback
 from tensorflow.keras.callbacks import LearningRateScheduler
 from tensorflow.keras.layers import Input, Dense, GRU, Add, Concatenate, BatchNormalization, Conv1D, Lambda, Dot, Flatten, Reshape
@@ -21,6 +21,8 @@ from tensorflow.keras.models import Model, load_model
 from tensorflow.keras.regularizers import l2
 from LARS_Opt import LARS
 import wasserstein
+
+HOME = '~'
 
 particlesTotal = 50
 entriesPerParticle = 4
@@ -99,11 +101,11 @@ if args.fineTune:
     modelNameAdd = modelNameAdd + "_fineTune" + ("" if int(args.fineTune)<0 else str(args.fineTune))
 
 print(args)
-if not os.path.isdir('/home/lsheldon/models/'+modelName):
-    os.mkdir('/home/lsheldon/models/'+modelName)
+if not os.path.isdir(f'{HOME}/models/{modelName}'):
+    os.mkdir(f'{HOME}/models/{modelName}')
     print("Directory created.")
-if modelName != modelNameAdd and not os.path.isdir('/home/lsheldon/models/'+modelNameAdd):
-    os.mkdir('/home/lsheldon/models/'+modelNameAdd)
+if modelName != modelNameAdd and not os.path.isdir(f'{HOME}/models/{modelNameAdd}'):
+    os.mkdir(f'{HOME}/models/{modelNameAdd}')
 
 np.random.seed(422022)
 tf.random.set_random_seed(57)
@@ -112,22 +114,22 @@ tf.random.set_random_seed(57)
 
 print("Extracting")
 
-fOne = h5py.File("/home/lsheldon/data/test_nom_bkg.z", 'r')
+fOne = h5py.File(f"{HOME}/data/test_nom_bkg.z", 'r')
 nom_bkg_data = fOne["taggerInputs"][:].astype(np.float32)
 print('Loaded nom_bkg')
 print(nom_bkg_data.shape)
 
-fTwo = h5py.File("/home/lsheldon/data/test_nom_sig.z", 'r')
+fTwo = h5py.File(f"{HOME}/data/test_nom_sig.z", 'r')
 nom_sig_data = fTwo["taggerInputs"][:].astype(np.float32)
 print('Loaded nom_sig')
 print(nom_sig_data.shape)
 
-fThree = h5py.File("/home/lsheldon/data/test_alt_bkg.z", 'r')
+fThree = h5py.File(f"{HOME}/data/test_alt_bkg.z", 'r')
 alt_bkg_data = fThree["taggerInputs"][:].astype(np.float32)
 print('Loaded alt_bkg')
 print(alt_bkg_data.shape)
 
-fFour = h5py.File("/home/lsheldon/data/test_alt_sig.z", 'r')
+fFour = h5py.File(f"{HOME}/data/test_alt_sig.z", 'r')
 alt_sig_data = fFour["taggerInputs"][:].astype(np.float32)
 print('Loaded alt_sig')
 print(alt_sig_data.shape)
@@ -247,9 +249,9 @@ if emd_debug_norm:
 
     plt.xlabel('EMD (normalized)')
     plt.ylabel('Probability Density')
-    plt.savefig('/home/lsheldon/plots/emds_norm.pdf')
+    plt.savefig(f'{HOME}/plots/emds_norm.pdf')
     plt.yscale('log')
-    plt.savefig('/home/lsheldon/plots/emds_norm_log.pdf')
+    plt.savefig(f'{HOME}/plots/emds_norm_log.pdf')
 
 if emd_debug:
     import matplotlib.pyplot as plt
@@ -275,9 +277,9 @@ if emd_debug:
 
     plt.xlabel('EMD (unnormalized)')
     plt.ylabel('Probability Density')
-    plt.savefig('/home/lsheldon/plots/emds.pdf')
+    plt.savefig(f'{HOME}/plots/emds.pdf')
     plt.yscale('log')
-    plt.savefig('/home/lsheldon/plots/emds_log.pdf')
+    plt.savefig(f'{HOME}/plots/emds_log.pdf')
 
 if emd_debug or emd_debug_norm:
     exit()
@@ -404,23 +406,23 @@ if args.redoPairs:
         val_pair_indices, val_labels = make_pairs(nom_rhos_val, alt_rhos_val, particlesConsidered, args.posPairs, args.negPairs)
         test_pair_indices, test_labels = make_pairs(nom_rhos_test, alt_rhos_test, particlesConsidered, args.posPairs, args.negPairs)
 
-    np.save("/home/lsheldon/pairs/trainingpairs%s.npy"%args.pairName, train_pair_indices, allow_pickle=True)
-    np.save("/home/lsheldon/pairs/traininglabels%s.npy"%args.pairName, train_labels, allow_pickle=True)
-    np.save("/home/lsheldon/pairs/valpairs%s.npy"%args.pairName, val_pair_indices, allow_pickle=True)
-    np.save("/home/lsheldon/pairs/vallabels%s.npy"%args.pairName, val_labels, allow_pickle=True)
-    np.save("/home/lsheldon/pairs/testpairs%s.npy"%args.pairName, test_pair_indices, allow_pickle=True)
-    np.save("/home/lsheldon/pairs/testlabels%s.npy"%args.pairName, test_labels, allow_pickle=True)
+    np.save(f"{HOME}/pairs/trainingpairs{args.pairName}.npy", train_pair_indices, allow_pickle=True)
+    np.save(f"{HOME}/pairs/traininglabels{args.pairName}.npy", train_labels, allow_pickle=True)
+    np.save(f"{HOME}/pairs/valpairs{args.pairName}.npy", val_pair_indices, allow_pickle=True)
+    np.save(f"{HOME}/pairs/vallabels{args.pairName}.npy", val_labels, allow_pickle=True)
+    np.save(f"{HOME}/pairs/testpairs{args.pairName}.npy", test_pair_indices, allow_pickle=True)
+    np.save(f"{HOME}/pairs/testlabels{args.pairName}.npy", test_labels, allow_pickle=True)
     
     if not args.trainClass or not args.trainFeat:
         exit()
 
 else:
-    test_labels = np.load('/home/lsheldon/pairs/testlabels%s.npy'%args.pairName, allow_pickle=True)
-    test_pair_indices = np.load('/home/lsheldon/pairs/testpairs%s.npy'%args.pairName, allow_pickle=True)
-    train_labels = np.load('/home/lsheldon/pairs/traininglabels%s.npy'%args.pairName, allow_pickle=True)
-    train_pair_indices = np.load('/home/lsheldon/pairs/trainingpairs%s.npy'%args.pairName, allow_pickle=True)
-    val_labels = np.load('/home/lsheldon/pairs/vallabels%s.npy'%args.pairName, allow_pickle=True)
-    val_pair_indices = np.load('/home/lsheldon/pairs/valpairs%s.npy'%args.pairName, allow_pickle=True)
+    test_labels = np.load(f'{HOME}/pairs/testlabels{args.pairName}.npy', allow_pickle=True)
+    test_pair_indices = np.load(f'{HOME}/pairs/testpairs{args.pairName}.npy', allow_pickle=True)
+    train_labels = np.load(f'{HOME}/pairs/traininglabels{args.pairName}.npy', allow_pickle=True)
+    train_pair_indices = np.load(f'{HOME}/pairs/trainingpairs{args.pairName}.npy', allow_pickle=True)
+    val_labels = np.load(f'{HOME}/pairs/vallabels{args.pairName}.npy', allow_pickle=True)
+    val_pair_indices = np.load(f'{HOME}/pairs/valpairs{args.pairName}.npy', allow_pickle=True)
 
     if args.EMD is not None:
         train_labels = (train_labels < args.EMD).astype(int)
@@ -806,7 +808,7 @@ if args.trainFeat:
     print('features',featureExtractor.summary())
     print('projector',projector.summary())
     
-    modelCallbacks = [ModelCheckpoint(filepath="/home/lsheldon/models/" + modelName + "/feat.h5", save_weights_only=True, monitor="val_loss" if args.patience>=0 else "loss",
+    modelCallbacks = [ModelCheckpoint(filepath=f"{HOME}/models/{modelName}/feat.h5", save_weights_only=True, monitor="val_loss" if args.patience>=0 else "loss",
                                       save_best_only=True),
                       ]
     if args.patience>=0:
@@ -839,7 +841,7 @@ if args.trainFeat:
         return data
 
     if args.reloadFeat:
-        model.load_weights("/home/lsheldon/models/" + modelName + "/feat.h5")
+        model.load_weights(f"{HOME}/models/{modelName}/feat.h5")
     print(train_labels.shape, train_pair_indices.shape)
     if args.noAugs:
         history = model.fit([traindata[0,:args.nSamples], traindata[1,:args.nSamples],train_labels[:args.nSamples]], train_labels[:args.nSamples], epochs=numberOfEpochs, batch_size=batchSize,
@@ -854,7 +856,7 @@ if args.trainFeat:
                 if self.best > logs.get('val_loss'):
                     self.best = logs.get('val_loss')
                     self.improvedlast = 0
-                    self.model.save_weights("/home/lsheldon/models/" + modelName + "/feat.h5", overwrite=True)
+                    self.model.save_weights(f"{HOME}/models/{modelName}/feat.h5", overwrite=True)
                 else:
                     self.improvedlast = self.improvedlast + 1
     
@@ -885,20 +887,20 @@ if args.trainFeat:
     for h in history.history:
         for ie in range(len(history.history[h])):
             history.history[h][ie] = float(history.history[h][ie])
-    with open("/home/lsheldon/models/" + modelName + "/history.json", "w") as f:
+    with open(f"{HOME}/models/{modelName}/history.json", "w") as f:
         print(history.history.keys())
         json.dump(history.history,f)
     
     print("Loading weights")
     
-    model.load_weights("/home/lsheldon/models/" + modelName + "/feat.h5")
+    model.load_weights(f"{HOME}/models/{modelName}/feat.h5")
     
-    featureExtractor.save("/home/lsheldon/models/" + modelName + "/featModel.h5") 
-    model.save("/home/lsheldon/models/" + modelName + "/modelSiam.h5") 
-    projector.save("/home/lsheldon/models/" + modelName + "/modelProj.h5") 
+    featureExtractor.save(f"{HOME}/models/{modelName}/featModel.h5") 
+    model.save(f"{HOME}/models/{modelName}/modelSiam.h5") 
+    projector.save(f"{HOME}/models/{modelName}/modelProj.h5") 
 
 else:
-    featureExtractor = load_model("/home/lsheldon/models/" + modelName + "/featModel.h5", custom_objects={'tf': tf, "RR":RR, "RS":RS, "RRT":RRT, "RST":RST, "particlesConsidered":particlesConsidered, "similarity":similarity, "vicreg_covariance":vicreg_covariance, "vicreg_variance":vicreg_variance, "vicregSVC":vicregSVC, "contrastive_loss_sim":contrastive_loss_sim, "contrastive_loss_simclr":contrastive_loss_simclr, "contrastive_loss_vicreg":contrastive_loss_vicreg, "contrastive_loss":contrastive_loss, "simCLR":simCLR})
+    featureExtractor = load_model(f"{HOME}/models/{modelName}/featModel.h5", custom_objects={'tf': tf, "RR":RR, "RS":RS, "RRT":RRT, "RST":RST, "particlesConsidered":particlesConsidered, "similarity":similarity, "vicreg_covariance":vicreg_covariance, "vicreg_variance":vicreg_variance, "vicregSVC":vicregSVC, "contrastive_loss_sim":contrastive_loss_sim, "contrastive_loss_simclr":contrastive_loss_simclr, "contrastive_loss_vicreg":contrastive_loss_vicreg, "contrastive_loss":contrastive_loss, "simCLR":simCLR})
     print('featurizer model loaded')
 
 if args.trainClass:
@@ -991,7 +993,7 @@ if args.trainClass:
         model = Model(inputs=inputContrastive, outputs=denseOutput)
 
     modelCallbacks = [EarlyStopping(patience=10),
-                  ModelCheckpoint(filepath="/home/lsheldon/models/" + modelNameAdd + "/class.h5", save_weights_only=True,
+                  ModelCheckpoint(filepath=f"{HOME}/models/{modelNameAdd}/class.h5", save_weights_only=True,
                                   save_best_only=True),
                   ]
     print(model.summary())
@@ -1020,24 +1022,24 @@ if args.trainClass:
     for h in history.history:
         for ie in range(len(history.history[h])):
             history.history[h][ie] = float(history.history[h][ie])
-    with open("/home/lsheldon/models/" + modelNameAdd + "/classhistory.json", "w") as f:
+    with open(f"{HOME}/models/{modelNameAdd}/classhistory.json", "w") as f:
         print(history.history.keys())
         json.dump(history.history,f)
 
     print("Loading weights")
 
-    model.load_weights("/home/lsheldon/models/" + modelNameAdd + "/class.h5")
+    model.load_weights(f"{HOME}/models/{modelNameAdd}/class.h5")
 
 
     if not args.fineTune:
-        model.save("/home/lsheldon/models/" + modelNameAdd + "/classModel.h5") 
+        model.save(f"{HOME}/models/{modelNameAdd}/classModel.h5") 
         partinput = Input(shape=(particlesConsidered, entriesPerParticle), name='partinput')
         featureExtractor._name = "featurizer_model"
         model._name = "classifier_model"
         fullout = model(featureExtractor(partinput))
         model = Model(inputs=partinput, outputs=fullout)
 
-    model.save("/home/lsheldon/models/" + modelNameAdd + "/fullModel.h5")
+    model.save(f"{HOME}/models/{modelNameAdd}/fullModel.h5")
     if args.fineTune:
-        featureExtractor.save("/home/lsheldon/models/" + modelNameAdd + "/ftFeatModel.h5")
+        featureExtractor.save(f"{HOME}/models/{modelNameAdd}/ftFeatModel.h5")
     print('saved full model')
