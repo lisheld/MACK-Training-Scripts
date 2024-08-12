@@ -55,4 +55,4 @@ We provide two training scripts for the two types of datasets tested. The "stand
 
 ### JetNet Dataset Model
 The arguments are identical to those for the standard dataset model, with the addition of one:
-* ptcut
+* ptcut: Defines the minimum momentum for jets
