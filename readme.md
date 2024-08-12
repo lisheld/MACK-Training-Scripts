@@ -48,8 +48,8 @@ We provide two training scripts for the two types of datasets tested. The "stand
 * `trainClass`: Whether or not to train the classifier
 * `doAttention`: Whether or not to use attention in the GNN architecture
 * `noAugs`: Whether or not to apply augmentations to data
-* `augData`: Defines the probabilities of each type of data for the first item in the pair. Format is [{P_Alt.}, {P_Aug-Alt}, {P_Nom}, {P_Aug-Nom}]. For example, [1,0,0,0] means the first item in each pair is exclusively non-augmented Alt data. [0.5,0.5,0,0] means the first item has a 50/50 chance to be either non-augmented Alt data or augmented Alt data.
-* `augMC`: Defines the probabilities of each type of data for the second item in the pair, same concept as augData. Format is [{P_Nom}, {P_Aug-Nom}, {P_Alt.}, {P_Aug-Alt}]
+* `augData`: Defines the probabilities of each type of data for the first item in the pair. Format is [P<sub>Alt</sub>, P<sub>Aug-Alt</sub>, P<sub>Nom</sub>, P<sub>Aug-Nom</sub>]. For example, [1,0,0,0] means the first item in each pair is exclusively non-augmented Alt data. [0.5,0.5,0,0] means the first item has a 50/50 chance to be either non-augmented Alt data or augmented Alt data.
+* `augMC`: Defines the probabilities of each type of data for the second item in the pair, same concept as augData. Format is [P<sub>Nom</sub>, P<sub>Aug-Nom</sub>, P<sub>Alt</sub>, P<sub>Aug-Alt</sub>]
 * `etaphiSmear`: Scale to use when using the smearing augmentation
 * `augs`: The type of augmentations to use if augmenting data
 
