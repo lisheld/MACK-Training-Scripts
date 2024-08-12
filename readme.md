@@ -6,7 +6,7 @@ The use of machine learning methods in high energy physics typically relies on l
 
 ## Datasets
 
-We provide two training scripts for the two types of datasets tested. The "standard" dataset simulates Z' -> qq vs. q/g, while the JetNet dataset simulates q(g) vs. W(Z). The models are the same, but both require slightly different loading methods.
+We provide two training models each (Supervised and Contrastive) for the two types of datasets tested. The "standard" dataset simulates Z' -> qq vs. q/g, while the JetNet dataset simulates q(g) vs. W(Z). Each respective type of model is the same across datasets, but with slight changes to how data is loaded.
 
 ## Arguments
 
