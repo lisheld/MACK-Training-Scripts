@@ -19,7 +19,6 @@ from tensorflow.keras.callbacks import LearningRateScheduler
 from tensorflow.keras.layers import Input, Dense, GRU, Add, Concatenate, BatchNormalization, Conv1D, Lambda, Dot, Flatten, Reshape
 from tensorflow.keras.models import Model, load_model
 from tensorflow.keras.regularizers import l2
-from LARS_Opt import LARS
 import wasserstein
 
 HOME = '~'
@@ -38,7 +37,6 @@ parser.add_argument('--label', action="store", dest="label", type=str, default="
 parser.add_argument('--labeladd', action="store", dest="labeladd", type=str, default="")
 parser.add_argument('--nSamples', action="store", dest="nSamples", type=int, default=-1)
 parser.add_argument('--warmLR', action="store", dest="warmLR", type=float, default=-1.)
-parser.add_argument('--LARS', action="store_true", dest="LARS")
 parser.add_argument('--Adam', action="store_true", dest="Adam")
 parser.add_argument('--LR', action="store", dest="LR", type=float, default=0.1)
 parser.add_argument('--fLR', action="store", dest="fLR", type=float, default=-1.)
@@ -813,9 +811,7 @@ if args.trainFeat:
                       ]
     if args.patience>=0:
         modelCallbacks.append(EarlyStopping(monitor="val_loss",patience=args.patience))
-    if args.LARS:
-        model.compile(optimizer=LARS(args.LR,weight_decay=0.000001), loss=contrastive_loss, metrics=['acc'])
-    elif args.Adam:
+    if args.Adam:
         model.compile(optimizer='adam', loss=contrastive_loss, metrics=['acc'])
     else:
         modelCallbacks.append(LearningRateScheduler(lr_scheduler, verbose=0))
@@ -998,9 +994,7 @@ if args.trainClass:
                   ]
     print(model.summary())
 
-    if args.LARS:
-        model.compile(optimizer=LARS(args.LR,weight_decay=0.000001), loss='binary_crossentropy', metrics=['acc'])
-    elif args.Adam:
+    if args.Adam:
         model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['acc'])
     else:
         modelCallbacks.append(LearningRateScheduler(lr_scheduler, verbose=0))

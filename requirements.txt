@@ -1,5 +1,4 @@
 numpy
 h5py
 tensorflow
-LARS_Opt
 wasserstein

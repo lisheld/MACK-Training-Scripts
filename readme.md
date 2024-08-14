@@ -19,7 +19,6 @@ We provide two training models each (Supervised and Contrastive) for the two typ
 * `decayEpochs`: Number of epochs to decay with a cosine scheduler
 * `warmLR`: Number of epochs to use during warmup with a cosine scheduler
 * `fLR`: Sets the epoch to end the cosine scheduler
-* `LARS`: Whether or not to try to use LARS optimizer
 * `l2reg`: Whether or not to use L2 regularization
 * `nEpochs`: Defines the number of epochs to train over
 * `particles`: Defines the number of particles to use in each jet
