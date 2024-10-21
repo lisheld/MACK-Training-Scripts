@@ -1,4 +1,4 @@
-# MACK: Mismodeling Addressed with Contrastive Knowledge [arXiv:XXXX.YYYYY]
+# MACK: Mismodeling Addressed with Contrastive Knowledge [arXiv:2410.13947]
 
 ## Abstract
 
